@@ -10,6 +10,13 @@ public class Percolation {
         if (n <= 0) {
             throw new IllegalArgumentException("Value is out of bounds");
         }
+
+        //Initialization or the grid
+        for (int i = 0; i<n; i++){
+            for(j =0; i<n; j++){
+                grid[i][j] = 0;
+            }
+        }
     }
 
     // opens the site (row, col) if it is not open already
@@ -56,7 +63,10 @@ public class Percolation {
 
     // test client (optional)
     public static void main(String[] args) {
-
+        Percolation p = new Percolation();
+        int row = StdRandom.uniformInt(20);
+        int col = StdRandom.uniformInt(20);
+        p.open(row,col);
     }
 
 }
