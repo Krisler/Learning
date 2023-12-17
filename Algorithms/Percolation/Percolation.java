@@ -109,7 +109,7 @@ public class Percolation {
     }
 
     // does the system percolate?
-    public boolean percolate() {
+    public boolean percolates() {
         if (wG.find(vTop) == wG.find(vBottom)) {
             return true;
         }
