@@ -117,27 +117,4 @@ public class Percolation {
 
     }
 
-  
-
-    // test client (optional)
-    public static void main(String[] args) {
-        int size = Integer.parseInt(args[0]);
-
-        Percolation percolation = new Percolation(size);
-        int argCount = args.length;
-        for (int i = 1; argCount >= 2; i += 2) {
-            int row = Integer.parseInt(args[i]);
-            int col = Integer.parseInt(args[i + 1]);
-            StdOut.printf("Adding row: %d  col: %d %n", row, col);
-            percolation.open(row, col);
-            if (percolation.percolate()) {
-                StdOut.printf("%nThe System percolates %n");
-            }
-            argCount -= 2;
-        }
-        if (!percolation.percolate()) {
-            StdOut.print("Does not percolate %n");
-        }
-    }
-
 }
