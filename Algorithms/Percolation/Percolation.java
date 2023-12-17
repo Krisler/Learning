@@ -1,5 +1,3 @@
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
@@ -19,10 +17,10 @@ public class Percolation {
             throw new IllegalArgumentException("Value is out of bounds");
         }
 
-        //Initialization or the grid
+        // Initialization or the grid
         grid = new boolean[gridsize][gridsize];
 
-        gridsize =n;
+        gridsize = n;
         gridSquared = n*n;
         wG  = new WeightedQuickUnionUF(gridSquared + 2);
         wF  = new WeightedQuickUnionUF(gridSquared + 1);
@@ -34,46 +32,46 @@ public class Percolation {
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
 
-        //Edge case check
+        // Edge case check
         if ((row) <= 0 || (col) <= 0) {
             throw new IllegalArgumentException("Values are out of bounds");
         } 
 
         // Check if the site is already openned
-        if(isOpen(row, col)){
+        if (isOpen(row, col)) {
             return;
         }
         
-        //Open site
+        // Open site
         grid[row-1][col-1] = true;
         openSites++;
 
         //Apply the union data type to connect all openned sites
         int flatIndex = (row * col) - 1;
-        if(row == 1){
+        if (row == 1) {
             wG.union(vTop, flatIndex);
             wF.union(vTop,flatIndex);
         }
-        if(row == gridsize) {
+        if (row == gridsize) {
             wG.union(vBottom, flatIndex);
         }
 
-        if(((row-1) <= gridsize || col <= gridsize) && isOpen((row-1),col)){ //Top
+        if (((row-1) <= gridsize || col <= gridsize) && isOpen((row-1),col)) { // Top
             wG.union(flatIndex,((row-1)*col)-1);
             wF.union(flatIndex,((row-1)*col)-1);
         }
 
-        if(((row+1) <= gridsize || col <= gridsize) && isOpen((row+1),col)){ //Bottom
+        if (((row+1) <= gridsize || col <= gridsize) && isOpen((row+1),col)) { // Bottom
             wG.union(flatIndex,((row+1)*col)-1);
             wF.union(flatIndex,((row+1)*col)-1);
         }
 
-        if((row <= gridsize || (col-1) <= gridsize) && isOpen(row,(col-1))){ //left
+        if ((row <= gridsize || (col-1) <= gridsize) && isOpen(row,(col-1))) { // left
             wG.union(flatIndex,(row*(col-1))-1);
             wF.union(flatIndex,(row*(col-1))-1);
         }
 
-        if((row <= gridsize || (col+1) <= gridsize) && isOpen(row,(col+1))){ //Right
+        if ((row <= gridsize || (col+1) <= gridsize) && isOpen(row,(col+1))) { // Right
             wG.union(flatIndex,(row*(col+1))-1);
             wF.union(flatIndex,(row*(col+1))-1);
         }
@@ -96,7 +94,7 @@ public class Percolation {
         if (row <= 0 || col <= 0) {
             throw new IllegalArgumentException("Values are out of bounds");
         }
-        if(wF.find((row*col)-1) == wF.find(vTop)) {
+        if (wF.find((row*col)-1) == wF.find(vTop)) {
             return true;
         }
         return false;
