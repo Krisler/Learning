@@ -80,9 +80,7 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if ((row) > gridsize || (col) > gridsize) {
-            throw new IllegalArgumentException("Values are out of bounds");
-        } 
+        validateSite(row, col);
         
         return grid[row-1][col-1];
 
@@ -91,9 +89,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        if (row  > gridsize || col > gridsize) {
-            throw new IllegalArgumentException("Values are out of bounds");
-        }
+        validateSite(row, col);
         if (wF.find((row*col)-1) == wF.find(vTop)) {
             return true;
         }
@@ -113,6 +109,18 @@ public class Percolation {
         }
         return false;
 
+    }
+
+    private void validateSite(int row, int col) {
+        if (!isOnGrid(row, col)) {
+            throw new IndexOutOfBoundsException("Index is out of bounds");
+        }
+    }
+
+    private boolean isOnGrid(int row, int col) {
+        int shiftRow = row - 1;
+        int shiftCol = col - 1;
+        return (shiftRow >= 0 && shiftCol >= 0 && shiftRow < gridsize && shiftCol < gridsize);
     }
 
 }
