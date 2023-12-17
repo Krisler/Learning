@@ -3,7 +3,15 @@ import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
-    private int grid[][];
+    private boolean[][] grid;
+    private int gridsize;
+    private WeightedQuickUnionUF wG;
+    private WeightedQuickUnionUF wF;
+    private int gridSquared;
+    private int vTop;
+    private int vBottom;
+    private int openSites;
+
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
@@ -12,61 +20,124 @@ public class Percolation {
         }
 
         //Initialization or the grid
-        for (int i = 0; i<n; i++){
-            for(j =0; i<n; j++){
-                grid[i][j] = 0;
-            }
-        }
+        grid = new boolean[gridsize][gridsize];
+
+        gridsize =n;
+        gridSquared = n*n;
+        wG  = new WeightedQuickUnionUF(gridSquared + 2);
+        wF  = new WeightedQuickUnionUF(gridSquared + 1);
+        vTop = gridSquared;
+        vBottom = gridSquared + 1;
+        openSites = 0;
     }
 
     // opens the site (row, col) if it is not open already
     public void open(int row, int col) {
 
-        if (row <= 0 || col <= 0) {
+        //Edge case check
+        if ((row) <= 0 || (col) <= 0) {
             throw new IllegalArgumentException("Values are out of bounds");
-        } else {
-            this.grid[row][col] = 1;
+        } 
+
+        // Check if the site is already openned
+        if(isOpen(row, col)){
+            return;
+        }
+        
+        //Open site
+        grid[row-1][col-1] = true;
+        openSites++;
+
+        //Apply the union data type to connect all openned sites
+        int flatIndex = (row * col) - 1;
+        if(row == 1){
+            wG.union(vTop, flatIndex);
+            wF.union(vTop,flatIndex);
+        }
+        if(row == gridsize) {
+            wG.union(vBottom, flatIndex);
+        }
+
+        if(((row-1) <= gridsize || col <= gridsize) && isOpen((row-1),col)){ //Top
+            wG.union(flatIndex,((row-1)*col)-1);
+            wF.union(flatIndex,((row-1)*col)-1);
+        }
+
+        if(((row+1) <= gridsize || col <= gridsize) && isOpen((row+1),col)){ //Bottom
+            wG.union(flatIndex,((row+1)*col)-1);
+            wF.union(flatIndex,((row+1)*col)-1);
+        }
+
+        if((row <= gridsize || (col-1) <= gridsize) && isOpen(row,(col-1))){ //left
+            wG.union(flatIndex,(row*(col-1))-1);
+            wF.union(flatIndex,(row*(col-1))-1);
+        }
+
+        if((row <= gridsize || (col+1) <= gridsize) && isOpen(row,(col+1))){ //Right
+            wG.union(flatIndex,(row*(col+1))-1);
+            wF.union(flatIndex,(row*(col+1))-1);
         }
 
     }
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if (row <= 0 || col <= 0) {
+        if ((row) <= 0 || (col) <= 0) {
             throw new IllegalArgumentException("Values are out of bounds");
-        } else {
-            if (this.grid[row][col] == 1) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        } 
+        
+        return grid[row-1][col-1];
 
     }
+
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
         if (row <= 0 || col <= 0) {
             throw new IllegalArgumentException("Values are out of bounds");
         }
+        if(wF.find((row*col)-1) == wF.find(vTop)) {
+            return true;
+        }
+        return false;
     }
 
     // returns the number of open sites
     public int numberOfOpenSites() {
+        return openSites;
 
     }
 
     // does the system percolate?
     public boolean percolate() {
+        if (wG.find(vTop) == wG.find(vBottom)) {
+            return true;
+        }
+        return false;
 
     }
 
+  
+
     // test client (optional)
     public static void main(String[] args) {
-        Percolation p = new Percolation();
-        int row = StdRandom.uniformInt(20);
-        int col = StdRandom.uniformInt(20);
-        p.open(row,col);
+        int size = Integer.parseInt(args[0]);
+
+        Percolation percolation = new Percolation(size);
+        int argCount = args.length;
+        for (int i = 1; argCount >= 2; i += 2) {
+            int row = Integer.parseInt(args[i]);
+            int col = Integer.parseInt(args[i + 1]);
+            StdOut.printf("Adding row: %d  col: %d %n", row, col);
+            percolation.open(row, col);
+            if (percolation.percolate()) {
+                StdOut.printf("%nThe System percolates %n");
+            }
+            argCount -= 2;
+        }
+        if (!percolation.percolate()) {
+            StdOut.print("Does not percolate %n");
+        }
     }
 
 }
