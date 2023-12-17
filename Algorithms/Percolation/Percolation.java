@@ -80,7 +80,7 @@ public class Percolation {
 
     // is the site (row, col) open?
     public boolean isOpen(int row, int col) {
-        if ((row) <= 0 || (col) <= 0) {
+        if ((row) > gridsize || (col) > gridsize) {
             throw new IllegalArgumentException("Values are out of bounds");
         } 
         
@@ -91,7 +91,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        if (row <= 0 || col <= 0) {
+        if (row  > gridsize || col > gridsize) {
             throw new IllegalArgumentException("Values are out of bounds");
         }
         if (wF.find((row*col)-1) == wF.find(vTop)) {
