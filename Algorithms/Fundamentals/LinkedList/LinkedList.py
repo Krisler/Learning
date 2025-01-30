@@ -79,7 +79,7 @@ class LinkedList:
     if temp is None:
       return
     prev.next =temp.next
-    
+
 def search(self, key):
     current = self.head
     while current is not None:
@@ -87,6 +87,19 @@ def search(self, key):
             return True
         current = current.next
     return False
+
+# Singly Listed List
+class SinglyLinkedList:
+    def __init__(self):
+        self.head = None
+
+#Doubly Linked List
+class DoublyLinkedListNode:
+    def __init__(self, data=None):
+        self.data = data
+        self.next = None
+        self.prev = None
+
 
 # Creating a linked list with nodes 1 -> 2 -> 3
 ll = LinkedList()
